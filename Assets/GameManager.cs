@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 {
     public Text pointText;
     public MovingCube item;
-    public Transform baseCube;
     public int level;
     float cubeHeight;
     public float distance = 2.75f;
@@ -23,7 +22,7 @@ public class GameManager : MonoBehaviour
         nextColor = item.GetComponent<Renderer>()
             .sharedMaterial.GetColor("_ColorTop");
         CreateCube();
-        topCubeTr = baseCube;
+        topCubeTr = item.transform;
     }
     void Update()
     {
@@ -100,7 +99,10 @@ public class GameManager : MonoBehaviour
         var newCube = Instantiate(item, startPos, item.transform.rotation);
         newCube.transform.parent = item.transform.parent;
         if (scaleModifyCubeTr != null)
+        {
             newCube.pivot = scaleModifyCubeTr.transform.localPosition;
+            newCube.transform.localScale = scaleModifyCubeTr.transform.localScale;
+        }
 
         newCube.gameObject.SetActive(true);
         newCube.name = level.ToString();

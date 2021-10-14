@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4445233, g: 0.49401838, b: 0.5733072, a: 1}
+  m_IndirectSpecularColor: {r: 0.44452277, g: 0.49401766, b: 0.5733061, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -392,7 +392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &232512768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,6 +408,9 @@ MonoBehaviour:
   pivot: {x: 0, y: 0, z: 0}
   desPoint: {x: 0, y: 0, z: 0}
   startPoint: {x: 0, y: 0, z: 0}
+  elapsTime: 0
+  "\uB098\uBA38\uC9C0\uBE7C\uAE301": 0
+  time: 0
 --- !u!65 &232512769
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -533,6 +536,9 @@ MonoBehaviour:
   pivot: {x: 0, y: 0, z: 0}
   desPoint: {x: 0, y: 0, z: 0}
   startPoint: {x: 0, y: 0, z: 0}
+  elapsTime: 0
+  "\uB098\uBA38\uC9C0\uBE7C\uAE301": 0
+  time: 0
 --- !u!65 &284387393
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -623,7 +629,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296997750}
   m_LocalRotation: {x: -0, y: -0.000000059604645, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.3, z: 0}
+  m_LocalPosition: {x: 0, y: -0.264, z: 0}
   m_LocalScale: {x: 2.9881005, y: 0.29881, z: 2.9881005}
   m_Children: []
   m_Father: {fileID: 372064132}
@@ -644,6 +650,9 @@ MonoBehaviour:
   pivot: {x: 0, y: 0, z: 0}
   desPoint: {x: 0, y: 0, z: 0}
   startPoint: {x: 0, y: 0, z: 0}
+  elapsTime: 0
+  "\uB098\uBA38\uC9C0\uBE7C\uAE301": 0
+  time: 0
 --- !u!65 &296997753
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -923,7 +932,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565070919}
   m_LocalRotation: {x: -0, y: -0.000000059604645, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.94, z: 0}
+  m_LocalPosition: {x: 0, y: -1.6, z: 0}
   m_LocalScale: {x: 2.9881005, y: 2.9881, z: 2.9881005}
   m_Children: []
   m_Father: {fileID: 372064132}
@@ -6081,6 +6090,9 @@ MonoBehaviour:
   pivot: {x: 0, y: 0, z: 0}
   desPoint: {x: 0, y: 0, z: 0}
   startPoint: {x: 0, y: 0, z: 0}
+  elapsTime: 0
+  "\uB098\uBA38\uC9C0\uBE7C\uAE301": 0
+  time: 0
 --- !u!65 &1830365248
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6252,7 +6264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointText: {fileID: 1982922331}
-  item: {fileID: 232512768}
+  item: {fileID: 296997752}
   baseCube: {fileID: 296997751}
   level: 0
   distance: 2.75
