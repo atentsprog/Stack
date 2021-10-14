@@ -9,10 +9,15 @@ public class GameManager : MonoBehaviour
     public int level;
     float cubeHeight;
     public float distance = 2.75f;
+    Color nextColor;
+    public float colorChangeStep = 2f;
+
     void Start()
     {
         cubeHeight = item.transform.localScale.y;
         item.gameObject.SetActive(false);
+        nextColor = item.GetComponent<Renderer>()
+            .material.GetColor("_ColorTop");
         CreateCube();
     }
     void Update()
@@ -35,5 +40,11 @@ public class GameManager : MonoBehaviour
         }
         var newCube = Instantiate(item, startPos, item.transform.rotation);
         newCube.gameObject.SetActive(true);
+
+        // 다음 색 지정하자.
+        Color.RGBToHSV(nextColor, out float h, out float s, out float v);
+        nextColor = Color.HSVToRGB(h + 1f/256 * colorChangeStep, s, v);
+        newCube.GetComponent<Renderer>().material.SetColor("_ColorTop", nextColor);
+        newCube.GetComponent<Renderer>().material.SetColor("_ColorBottom", nextColor);
     }
 }
