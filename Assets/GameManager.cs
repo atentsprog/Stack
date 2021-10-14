@@ -44,7 +44,16 @@ public class GameManager : MonoBehaviour
         // 다음 색 지정하자.
         Color.RGBToHSV(nextColor, out float h, out float s, out float v);
         nextColor = Color.HSVToRGB(h + 1f/256 * colorChangeStep, s, v);
+
+        //// 그라데이션 사용할꺼면 아래 로직 사용
+        //nextColor = gradient.Evaluate( level % 100f * 0.01f);
+
         newCube.GetComponent<Renderer>().material.SetColor("_ColorTop", nextColor);
         newCube.GetComponent<Renderer>().material.SetColor("_ColorBottom", nextColor);
+
+        // 카메라 위로 이동하자.
+        Camera.main.transform.Translate(0, cubeHeight, 0, Space.World);
+
     }
+    public Gradient gradient;
 }
