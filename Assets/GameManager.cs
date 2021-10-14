@@ -53,8 +53,10 @@ public class GameManager : MonoBehaviour
         Vector3 newCubeScale, newCubePos;
         //currentCubeTr  이번에 만들어진 큐브 -> 이거랑 비교하면 안됨.
         // lastCubeTr 와 이거전에 만들어진 큐브와 비교해야함.
-        isGameOver = (topCubeTr.localScale.x < Mathf.Abs(scaleModifyCubeTr.localPosition.x - topCubeTr.localPosition.x))
-            || (topCubeTr.localScale.z < Mathf.Abs(scaleModifyCubeTr.localPosition.z - topCubeTr.localPosition.z));
+        float absOffsetX = Mathf.Abs(scaleModifyCubeTr.localPosition.x - topCubeTr.localPosition.x);
+        float absOffsetZ = Mathf.Abs(scaleModifyCubeTr.localPosition.z - topCubeTr.localPosition.z);
+        isGameOver = (topCubeTr.localScale.x < absOffsetX)
+            || (topCubeTr.localScale.z < absOffsetZ);
 
         if(isGameOver)
         {
@@ -64,19 +66,60 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        bool moveLocalX = absOffsetX > 0.0001f;
+
         newCubeScale = new Vector3(
-            topCubeTr.localScale.x - Mathf.Abs(scaleModifyCubeTr.localPosition.x - topCubeTr.localPosition.x)
+            topCubeTr.localScale.x - absOffsetX
             , scaleModifyCubeTr.localScale.y
-            , topCubeTr.localScale.z - Mathf.Abs(scaleModifyCubeTr.localPosition.z - topCubeTr.localPosition.z)
+            , topCubeTr.localScale.z - absOffsetZ
             );
 
-        newCubePos = Vector3.Lerp(scaleModifyCubeTr.position, topCubeTr.position, 0.5f) + Vector3.up * cubeHeight * 0.5f;
+        Vector3 dropCubeScale, dropCubePos;
+        dropCubeScale = new Vector3(
+            scaleModifyCubeTr.localScale.x - newCubeScale.x
+            , scaleModifyCubeTr.localScale.y
+            , scaleModifyCubeTr.localScale.z - newCubeScale.z
+            );
+
+        if (dropCubeScale.x < 0.001)
+            dropCubeScale.x = scaleModifyCubeTr.localScale.x;
+
+        if (dropCubeScale.z < 0.001)
+            dropCubeScale.z = scaleModifyCubeTr.localScale.z;
+
+
+        newCubePos = Vector3.Lerp(scaleModifyCubeTr.position, topCubeTr.position, 0.5f);
+        newCubePos.y = scaleModifyCubeTr.position.y;
+
+        bool isNegativePositionX = scaleModifyCubeTr.localPosition.x < topCubeTr.localPosition.x;
+        bool isNegativePositionZ = scaleModifyCubeTr.localPosition.z < topCubeTr.localPosition.z;
+        float directionX = isNegativePositionX ? 1 : -1;
+        float directionZ = isNegativePositionZ ? -1 : 1;
+        if (moveLocalX)
+            dropCubePos = scaleModifyCubeTr.localPosition - new Vector3(newCubeScale.x, 0, 0) * 0.5f * directionX;
+        else
+            dropCubePos = scaleModifyCubeTr.localPosition + new Vector3(0, 0, newCubeScale.z) * 0.5f * directionZ;
+        //print($"moveLocalX:{moveLocalX}, 크기 줄인 큐브 LocalPos :{scaleModifyCubeTr.localPosition.x}, dropCubePos:{dropCubePos.x}, newCubeScale.x:{newCubeScale.x}");
+
+        //Debug.Break();
 
         scaleModifyCubeTr.localScale = newCubeScale;
         scaleModifyCubeTr.position = newCubePos;
         scaleModifyCubeTr.GetComponent<MovingCube>().enabled = false;
         scaleModifyCubeTr.name = "크기 줄인 큐브";
+
+
+        // 짤린 큐브 생성하자.
+        //짤린 부분이 최소값보다 작다면 위치 스냅 시키고 콤보수치 올리자.
+        var dropGo = Instantiate(scaleModifyCubeTr.gameObject, dropCubePos, scaleModifyCubeTr.rotation, scaleModifyCubeTr.parent);
+        dropGo.transform.localScale = dropCubeScale;
+        dropGo.transform.localPosition = dropCubePos;
+        dropGo.name = "드랍될 큐브";
+        dropGo.AddComponent<Rigidbody>();
     }
+
+    public float perfectMatchMaxDistance = 0.001f;
+    public int comboCount;
 
     Transform topCubeTr;
     Transform scaleModifyCubeTr;
@@ -87,7 +130,7 @@ public class GameManager : MonoBehaviour
 
         // 홀 수 일때는 오른쪽, 짝 수 일때는 왼쪽
         Vector3 startPos;
-        if(level % 2 == 1) // 홀수
+        if(level % 2 == 0) // 홀수
         {
             startPos = new Vector3(distance, level * cubeHeight, distance);
         }
