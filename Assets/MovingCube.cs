@@ -14,12 +14,15 @@ public class MovingCube : MonoBehaviour
         desPoint = new Vector3(-startPoint.x + pivot.x, startPoint.y, -startPoint.z + pivot.z);
         startTime = Time.time;
     }
-    
 
+    public float elapsTime;
+    public float 나머지빼기1;
+    public float time;
     void Update()
     {
-        float elapsTime = Time.time - startTime;
-        float time = Mathf.Abs(elapsTime % 2 - 1f);
+        elapsTime = Time.time - startTime;
+        나머지빼기1 = elapsTime % 2 - 1f;
+        time = Mathf.Abs(나머지빼기1);
         Vector3 pos = Vector3.Lerp(desPoint, startPoint, time);
         transform.localPosition = pos;
     }
