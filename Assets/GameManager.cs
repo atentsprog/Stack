@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -28,10 +29,21 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (isGameOver)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                return;
+            }
+
             BreakCube();
+            if (isGameOver)
+            {
+                return;
+            }
             CreateCube();
         }
     }
+    public bool isGameOver;
     private void BreakCube()
     {
         if (scaleModifyCubeTr == null) // 첫번째는 
@@ -42,13 +54,24 @@ public class GameManager : MonoBehaviour
         Vector3 newCubeScale, newCubePos;
         //currentCubeTr  이번에 만들어진 큐브 -> 이거랑 비교하면 안됨.
         // lastCubeTr 와 이거전에 만들어진 큐브와 비교해야함.
+        isGameOver = (topCubeTr.localScale.x < Mathf.Abs(scaleModifyCubeTr.localPosition.x - topCubeTr.localPosition.x))
+            || (topCubeTr.localScale.z < Mathf.Abs(scaleModifyCubeTr.localPosition.z - topCubeTr.localPosition.z));
+
+        if(isGameOver)
+        {
+            scaleModifyCubeTr.GetComponent<MovingCube>().enabled = false;
+            scaleModifyCubeTr.gameObject.AddComponent<Rigidbody>();
+            pointText.text = "Game Over";
+            return;
+        }
+
         newCubeScale = new Vector3(
             topCubeTr.localScale.x - Mathf.Abs(scaleModifyCubeTr.localPosition.x - topCubeTr.localPosition.x)
             , scaleModifyCubeTr.localScale.y
             , topCubeTr.localScale.z - Mathf.Abs(scaleModifyCubeTr.localPosition.z - topCubeTr.localPosition.z)
             );
 
-        newCubePos = Vector3.Lerp(scaleModifyCubeTr.position, topCubeTr.position, 0.5f) + Vector3.up * cubeHeight;
+        newCubePos = Vector3.Lerp(scaleModifyCubeTr.position, topCubeTr.position, 0.5f) + Vector3.up * cubeHeight * 0.5f;
 
         scaleModifyCubeTr.localScale = newCubeScale;
         scaleModifyCubeTr.position = newCubePos;
@@ -61,7 +84,6 @@ public class GameManager : MonoBehaviour
 
     private void CreateCube()
     {
-        level++;
         pointText.text = level.ToString();
 
         // 홀 수 일때는 오른쪽, 짝 수 일때는 왼쪽
@@ -78,7 +100,7 @@ public class GameManager : MonoBehaviour
         var newCube = Instantiate(item, startPos, item.transform.rotation);
         newCube.transform.parent = item.transform.parent;
         if (scaleModifyCubeTr != null)
-            newCube.pivot = scaleModifyCubeTr.transform.position;
+            newCube.pivot = scaleModifyCubeTr.transform.localPosition;
 
         newCube.gameObject.SetActive(true);
         newCube.name = level.ToString();
@@ -97,6 +119,7 @@ public class GameManager : MonoBehaviour
 
         topCubeTr = scaleModifyCubeTr;
         scaleModifyCubeTr = newCube.transform;
+        level++;
     }
     public Gradient gradient;
 }

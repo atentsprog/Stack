@@ -405,6 +405,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558379ab6314eeb4c8ea79e6517fc536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivot: {x: 0, y: 0, z: 0}
+  desPoint: {x: 0, y: 0, z: 0}
+  startPoint: {x: 0, y: 0, z: 0}
 --- !u!65 &232512769
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -527,6 +530,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558379ab6314eeb4c8ea79e6517fc536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivot: {x: 0, y: 0, z: 0}
+  desPoint: {x: 0, y: 0, z: 0}
+  startPoint: {x: 0, y: 0, z: 0}
 --- !u!65 &284387393
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -635,6 +641,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558379ab6314eeb4c8ea79e6517fc536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivot: {x: 0, y: 0, z: 0}
+  desPoint: {x: 0, y: 0, z: 0}
+  startPoint: {x: 0, y: 0, z: 0}
 --- !u!65 &296997753
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -931,7 +940,6 @@ GameObject:
   - component: {fileID: 685312500}
   - component: {fileID: 685312499}
   - component: {fileID: 685312498}
-  - component: {fileID: 685312497}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -939,20 +947,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &685312497
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685312496}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &685312498
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5914,12 +5908,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1042238723}
-  m_LocalRotation: {x: -1, y: -0, z: -0, w: 0.000000104308114}
-  m_LocalPosition: {x: 0, y: 3.13, z: 4.74}
+  m_LocalRotation: {x: -0.9238796, y: -0, z: -0, w: -0.38268334}
+  m_LocalPosition: {x: 0, y: 3.9810104, z: 15.421999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_Father: {fileID: 1669073729}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -180, y: 0, z: 0}
 --- !u!1 &1669073726
 GameObject:
@@ -6001,7 +5995,8 @@ Transform:
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 11.22, z: -8.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1042238726}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
@@ -6083,6 +6078,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558379ab6314eeb4c8ea79e6517fc536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pivot: {x: 0, y: 0, z: 0}
+  desPoint: {x: 0, y: 0, z: 0}
+  startPoint: {x: 0, y: 0, z: 0}
 --- !u!65 &1830365248
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6259,6 +6257,7 @@ MonoBehaviour:
   level: 0
   distance: 2.75
   colorChangeStep: 5.63
+  isGameOver: 0
   gradient:
     serializedVersion: 2
     key0: {r: 0.7803922, g: 0.9843138, b: 0.40784317, a: 1}
