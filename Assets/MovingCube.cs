@@ -10,8 +10,11 @@ public class MovingCube : MonoBehaviour
     float startTime;
     void Start()
     {
-        startPoint = new Vector3(transform.localPosition.x + pivot.x, transform.position.y, transform.localPosition.z + pivot.z);
-        desPoint = new Vector3(-startPoint.x + pivot.x, startPoint.y, -startPoint.z + pivot.z);
+        startPoint = new Vector3(transform.localPosition.x, transform.position.y, transform.localPosition.z);
+        desPoint = new Vector3(-startPoint.x, startPoint.y, -startPoint.z);
+        pivot.y = 0;
+        startPoint += pivot;
+        desPoint += pivot;
         startTime = Time.time;
     }
 
