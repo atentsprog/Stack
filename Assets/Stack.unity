@@ -964,7 +964,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685312496}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -6265,7 +6265,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointText: {fileID: 1982922331}
   item: {fileID: 296997752}
-  baseCube: {fileID: 296997751}
   level: 0
   distance: 2.75
   colorChangeStep: 5.63
