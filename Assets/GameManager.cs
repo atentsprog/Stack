@@ -50,36 +50,58 @@ public class GameManager : MonoBehaviour
 
         //// 스케일, 
         //// 포지션,
-        Vector3 newCubeScale, newCubePos;
         //currentCubeTr  이번에 만들어진 큐브 -> 이거랑 비교하면 안됨.
         // lastCubeTr 와 이거전에 만들어진 큐브와 비교해야함.
         float absOffsetX = Mathf.Abs(scaleModifyCubeTr.localPosition.x - topCubeTr.localPosition.x);
         float absOffsetZ = Mathf.Abs(scaleModifyCubeTr.localPosition.z - topCubeTr.localPosition.z);
+
         isGameOver = (topCubeTr.localScale.x < absOffsetX)
             || (topCubeTr.localScale.z < absOffsetZ);
 
-        if(isGameOver)
+        if (isGameOver)
         {
-            scaleModifyCubeTr.GetComponent<MovingCube>().enabled = false;
-            scaleModifyCubeTr.gameObject.AddComponent<Rigidbody>();
-            pointText.text = "Game Over";
+            OnGameOver();
             return;
         }
 
         bool moveLocalX = absOffsetX > 0.0001f;
 
-        newCubeScale = new Vector3(
+        Vector3 newCubeScale = new Vector3(
             topCubeTr.localScale.x - absOffsetX
             , scaleModifyCubeTr.localScale.y
             , topCubeTr.localScale.z - absOffsetZ
             );
 
-        Vector3 dropCubeScale, dropCubePos;
+        // 짤린 큐브의 크기와 위치 구하기
+        GetDropCubeScaleAndPosition(newCubeScale, moveLocalX, out Vector3 dropCubeScale, out Vector3 dropCubePos);
+        //print($"moveLocalX:{moveLocalX}, 크기 줄인 큐브 LocalPos :{scaleModifyCubeTr.localPosition.x}, dropCubePos:{dropCubePos.x}, newCubeScale.x:{newCubeScale.x}");
+        //Debug.Break();
+
+        // 제대로 드랍된 큐브 생성
+        CrateRemainCube(newCubeScale);
+
+
+        // 짤린 큐브 생성하자.
+        CreateDropCube(dropCubeScale, dropCubePos);
+
+
+        // todo : 짤린 부분이 최소값보다 작다면 위치 스냅 시키고 콤보수치 올리자.
+    }
+
+    private void OnGameOver()
+    {
+        scaleModifyCubeTr.GetComponent<MovingCube>().enabled = false;
+        scaleModifyCubeTr.gameObject.AddComponent<Rigidbody>();
+        pointText.text = "Game Over";
+    }
+
+    private void GetDropCubeScaleAndPosition(Vector3 newCubeScale, bool moveLocalX, out Vector3 dropCubeScale, out Vector3 dropCubePos)
+    {
         dropCubeScale = new Vector3(
-            scaleModifyCubeTr.localScale.x - newCubeScale.x
-            , scaleModifyCubeTr.localScale.y
-            , scaleModifyCubeTr.localScale.z - newCubeScale.z
-            );
+    scaleModifyCubeTr.localScale.x - newCubeScale.x
+    , scaleModifyCubeTr.localScale.y
+    , scaleModifyCubeTr.localScale.z - newCubeScale.z
+    );
 
         if (dropCubeScale.x < 0.001)
             dropCubeScale.x = scaleModifyCubeTr.localScale.x;
@@ -87,9 +109,6 @@ public class GameManager : MonoBehaviour
         if (dropCubeScale.z < 0.001)
             dropCubeScale.z = scaleModifyCubeTr.localScale.z;
 
-
-        newCubePos = Vector3.Lerp(scaleModifyCubeTr.position, topCubeTr.position, 0.5f);
-        newCubePos.y = scaleModifyCubeTr.position.y;
 
         bool isNegativePositionX = scaleModifyCubeTr.localPosition.x < topCubeTr.localPosition.x;
         bool isNegativePositionZ = scaleModifyCubeTr.localPosition.z < topCubeTr.localPosition.z;
@@ -99,18 +118,21 @@ public class GameManager : MonoBehaviour
             dropCubePos = scaleModifyCubeTr.localPosition - new Vector3(newCubeScale.x, 0, 0) * 0.5f * directionX;
         else
             dropCubePos = scaleModifyCubeTr.localPosition + new Vector3(0, 0, newCubeScale.z) * 0.5f * directionZ;
-        //print($"moveLocalX:{moveLocalX}, 크기 줄인 큐브 LocalPos :{scaleModifyCubeTr.localPosition.x}, dropCubePos:{dropCubePos.x}, newCubeScale.x:{newCubeScale.x}");
+    }
 
-        //Debug.Break();
+    private void CrateRemainCube(Vector3 newCubeScale)
+    {
+        Vector3 newCubePos = Vector3.Lerp(scaleModifyCubeTr.position, topCubeTr.position, 0.5f);
+        newCubePos.y = scaleModifyCubeTr.position.y;
 
         scaleModifyCubeTr.localScale = newCubeScale;
         scaleModifyCubeTr.position = newCubePos;
         scaleModifyCubeTr.GetComponent<MovingCube>().enabled = false;
         scaleModifyCubeTr.name = "크기 줄인 큐브";
+    }
 
-
-        // 짤린 큐브 생성하자.
-        //짤린 부분이 최소값보다 작다면 위치 스냅 시키고 콤보수치 올리자.
+    private void CreateDropCube(Vector3 dropCubeScale, Vector3 dropCubePos)
+    {
         var dropGo = Instantiate(scaleModifyCubeTr.gameObject, dropCubePos, scaleModifyCubeTr.rotation, scaleModifyCubeTr.parent);
         dropGo.transform.localScale = dropCubeScale;
         dropGo.transform.localPosition = dropCubePos;
