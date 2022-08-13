@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         // lastCubeTr 와 이거전에 만들어진 큐브와 비교해야함.
         float absOffsetX = Mathf.Abs(lastInClub.localPosition.x - topCubeTr.localPosition.x);
         float absOffsetZ = Mathf.Abs(lastInClub.localPosition.z - topCubeTr.localPosition.z);
-
+        //absOffsetZ = absOffsetX = 0;
         isGameOver = (topCubeTr.localScale.x < absOffsetX)
             || (topCubeTr.localScale.z < absOffsetZ);
 
@@ -110,21 +110,20 @@ public class GameManager : MonoBehaviour
     , lastInClub.localScale.z - newCubeScale.z
     );
 
-        if (dropCubeScale.x < 0.001)
-            dropCubeScale.x = lastInClub.localScale.x;
-
-        if (dropCubeScale.z < 0.001)
-            dropCubeScale.z = lastInClub.localScale.z;
-
-
         bool isNegativePositionX = lastInClub.localPosition.x < topCubeTr.localPosition.x;
         bool isNegativePositionZ = lastInClub.localPosition.z < topCubeTr.localPosition.z;
         float directionX = isNegativePositionX ? 1 : -1;
         float directionZ = isNegativePositionZ ? -1 : 1;
         if (moveLocalX)
+        {
             dropCubePos = lastInClub.localPosition - new Vector3(newCubeScale.x, 0, 0) * 0.5f * directionX;
+            dropCubeScale.z = lastInClub.localScale.z;
+        }
         else
+        {
             dropCubePos = lastInClub.localPosition + new Vector3(0, 0, newCubeScale.z) * 0.5f * directionZ;
+            dropCubeScale.x = lastInClub.localScale.x;
+        }
     }
 
     private void CrateInCube(Vector3 newCubeScale)
