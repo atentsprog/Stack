@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cube
-  m_Shader: {fileID: -6465566751694194690, guid: 131ed2b8d00c056488238911472f813e, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: a695629ae3477e5469a1d595b5a03b53, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -97,6 +97,7 @@ Material:
     - Vector1_6e12275293314cb7a52c177f83f8f9aa: 0.03
     - Vector1_c77d81e545954cd0b55278e2ba9a8830: -0.5
     - Vector1_fde129e198e94c77ac906bc5d7f525ab: 0.9
+    - _Add: -2.31
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -112,6 +113,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _Multiply: 3.91
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -124,6 +126,7 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _smoothness: 0
     m_Colors:
     - Color_4426999063b847ddb3ca0200d0cd3a69: {r: 0.764816, g: 0.9339623, b: 0.33922213, a: 0}
     - Color_64d861fce71044349695d1bac7f2ea98: {r: 0.43493587, g: 0.5471698, b: 0.22970808, a: 0}
@@ -131,8 +134,8 @@ Material:
     - Color_d3f90b46fa4040c48d4031973961bef6: {r: 0.6634172, g: 0.8018868, b: 0.31394622, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorBottom: {r: 0.70980394, g: 0.9450981, b: 0.47058827, a: 0}
-    - _ColorTop: {r: 0.6634172, g: 0.8018868, b: 0.31394622, a: 0}
+    - _ColorBottom: {r: 0.47058827, g: 0.94509804, b: 0.6550164, a: 0}
+    - _ColorTop: {r: 0.6027419, g: 0.9339623, b: 0.5154415, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
