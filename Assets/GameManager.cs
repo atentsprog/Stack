@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.anyKeyDown)
         {
             if (isGameOver)
             {
@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
     {
         lastInClub.GetComponent<MovingCube>().enabled = false;
         lastInClub.gameObject.AddComponent<Rigidbody>();
+        lastInClub.GetComponent<Collider>().enabled = true;
         pointText.text = "Game Over";
     }
 
@@ -134,6 +135,7 @@ public class GameManager : MonoBehaviour
         lastInClub.localScale = newCubeScale;
         lastInClub.position = newCubePos;
         lastInClub.GetComponent<MovingCube>().enabled = false;
+        lastInClub.GetComponent<Collider>().enabled = true;
         lastInClub.name = $"In:{level}";
     }
 
@@ -144,6 +146,7 @@ public class GameManager : MonoBehaviour
         dropGo.transform.localPosition = dropCubePos;
         dropGo.name = $"Out:{level}";
         dropGo.AddComponent<Rigidbody>();
+        dropGo.GetComponent<Collider>().enabled = true;
     }
 
     public float perfectMatchMaxDistance = 0.001f;
