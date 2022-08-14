@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            DropCube();
+            StopCube();
             if (isGameOver)
             {
                 return;
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         }
     }
     public bool isGameOver;
-    private void DropCube()
+    private void StopCube()
     {
         if (movingCube == null) // 움직이는 큐브가 없다면 드랍하지 말자.
             return;
@@ -93,12 +93,12 @@ public class GameManager : MonoBehaviour
         pointText.text = "Game Over";
     }
 
-    private void GetOutCubeScaleAndPosition(Vector3 newCubeScale, out Vector3 dropCubeScale, out Vector3 dropCubePos)
+    private void GetOutCubeScaleAndPosition(Vector3 inCubeScale, out Vector3 outCubeScale, out Vector3 outCubePos)
     {
-        dropCubeScale = new Vector3(
-    movingCube.localScale.x - newCubeScale.x
+        outCubeScale = new Vector3(
+    movingCube.localScale.x - inCubeScale.x
     , movingCube.localScale.y
-    , movingCube.localScale.z - newCubeScale.z
+    , movingCube.localScale.z - inCubeScale.z
     );
 
         bool isNegativePositionX = movingCube.localPosition.x < stackedCubeTr.localPosition.x;
@@ -110,13 +110,13 @@ public class GameManager : MonoBehaviour
 
         if (moveLocalX)
         {
-            dropCubePos = movingCube.localPosition - new Vector3(newCubeScale.x, 0, 0) * 0.5f * directionX;
-            dropCubeScale.z = movingCube.localScale.z;
+            outCubePos = movingCube.localPosition - new Vector3(inCubeScale.x, 0, 0) * 0.5f * directionX;
+            outCubeScale.z = movingCube.localScale.z;
         }
         else
         {
-            dropCubePos = movingCube.localPosition + new Vector3(0, 0, newCubeScale.z) * 0.5f * directionZ;
-            dropCubeScale.x = movingCube.localScale.x;
+            outCubePos = movingCube.localPosition + new Vector3(0, 0, inCubeScale.z) * 0.5f * directionZ;
+            outCubeScale.x = movingCube.localScale.x;
         }
     }
 
