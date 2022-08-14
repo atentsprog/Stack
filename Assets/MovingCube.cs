@@ -1,12 +1,12 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MovingCube : MonoBehaviour
-{
+{ 
     public Vector3 pivot;
-    public Vector3 desPoint;    // ¸ñÇ¥ÁöÁ¡.
-    public Vector3 startPoint;  // ½ÃÀÛ ÁöÁ¡.
+    public Vector3 desPoint;    // ëª©í‘œì§€ì .
+    public Vector3 startPoint;  // ì‹œì‘ ì§€ì .
     float startTime;
     void Start()
     {
@@ -19,13 +19,13 @@ public class MovingCube : MonoBehaviour
     }
 
     public float elapsTime;
-    public float ³ª¸ÓÁö»©±â1;
+    public float ë‚˜ë¨¸ì§€ë¹¼ê¸°1;
     public float time;
     void Update()
     {
         elapsTime = Time.time - startTime;
-        ³ª¸ÓÁö»©±â1 = elapsTime % 2 - 1f;
-        time = Mathf.Abs(³ª¸ÓÁö»©±â1);
+        ë‚˜ë¨¸ì§€ë¹¼ê¸°1 = elapsTime % 2 - 1f;
+        time = Mathf.Abs(ë‚˜ë¨¸ì§€ë¹¼ê¸°1);
         Vector3 pos = Vector3.Lerp(desPoint, startPoint, time);
         transform.localPosition = pos;
     }

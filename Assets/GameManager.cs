@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         nextColor = item.GetComponent<Renderer>()
             .sharedMaterial.GetColor("_ColorTop");
         CreateNextCube();
-        topCubeTr = item.transform;
+        stackedCubeTr = item.transform;
     }
     void Update()
     {
@@ -51,18 +51,14 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     private void DropCube()
     {
-        if (lastInCube == null) // Ã¹¹øÂ°´Â 
+        if (movingCube == null) // ì›€ì§ì´ëŠ” íë¸Œê°€ ì—†ë‹¤ë©´ ë“œëí•˜ì§€ ë§ì.
             return;
 
-        //// ½ºÄÉÀÏ, 
-        //// Æ÷Áö¼Ç,
-        //currentCubeTr  ÀÌ¹ø¿¡ ¸¸µé¾îÁø Å¥ºê -> ÀÌ°Å¶û ºñ±³ÇÏ¸é ¾ÈµÊ.
-        // lastCubeTr ¿Í ÀÌ°ÅÀü¿¡ ¸¸µé¾îÁø Å¥ºê¿Í ºñ±³ÇØ¾ßÇÔ.
-        float absOffsetX = Mathf.Abs(lastInCube.localPosition.x - topCubeTr.localPosition.x);
-        float absOffsetZ = Mathf.Abs(lastInCube.localPosition.z - topCubeTr.localPosition.z);
-        //absOffsetZ = absOffsetX = 0;
-        isGameOver = (topCubeTr.localScale.x < absOffsetX)
-            || (topCubeTr.localScale.z < absOffsetZ);
+        float absOffsetX = Mathf.Abs(movingCube.localPosition.x - stackedCubeTr.localPosition.x);
+        float absOffsetZ = Mathf.Abs(movingCube.localPosition.z - stackedCubeTr.localPosition.z);
+       
+        isGameOver = (stackedCubeTr.localScale.x < absOffsetX)
+            || (stackedCubeTr.localScale.z < absOffsetZ);
 
         if (isGameOver)
         {
@@ -70,77 +66,75 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        bool moveLocalX = level % 2 == 0;// absOffsetX > 0.0001f;
-
-        Vector3 newCubeScale = new Vector3(
-            topCubeTr.localScale.x - absOffsetX
-            , lastInCube.localScale.y
-            , topCubeTr.localScale.z - absOffsetZ
+        Vector3 inCubeScale = new Vector3(
+            stackedCubeTr.localScale.x - absOffsetX
+            , movingCube.localScale.y
+            , stackedCubeTr.localScale.z - absOffsetZ
             );
 
-        // Â©¸° Å¥ºêÀÇ Å©±â¿Í À§Ä¡ ±¸ÇÏ±â
-        GetDropCubeScaleAndPosition(newCubeScale, moveLocalX, out Vector3 dropCubeScale, out Vector3 dropCubePos);
-        //print($"moveLocalX:{moveLocalX}, Å©±â ÁÙÀÎ Å¥ºê LocalPos :{scaleModifyCubeTr.localPosition.x}, dropCubePos:{dropCubePos.x}, newCubeScale.x:{newCubeScale.x}");
-        //Debug.Break();
+        // ì§¤ë¦° íë¸Œì˜ í¬ê¸°ì™€ ìœ„ì¹˜ êµ¬í•˜ê¸°
+        GetOutCubeScaleAndPosition(inCubeScale, out Vector3 outCubeScale, out Vector3 outCubePos);
+        
+        // ì´ì „ íë¸Œ ì˜ì—­ì•ˆì— ë“œëëœ íë¸Œ ìƒì„±
+        CrateInCube(inCubeScale);
 
-        // Á¦´ë·Î µå¶øµÈ Å¥ºê »ı¼º
-        CrateInCube(newCubeScale);
-
-
-        // Â©¸° Å¥ºê »ı¼ºÇÏÀÚ.
-        CreateOutCube(dropCubeScale, dropCubePos);
+        // ì´ì „ íë¸Œ ë°”ê¹¥ì—ì„œ ìƒê¸´ ë“œëë  íë¸Œ ìƒì„±í•˜ì.
+        CreateOutCube(outCubeScale, outCubePos);
 
 
-        // todo : Â©¸° ºÎºĞÀÌ ÃÖ¼Ò°ªº¸´Ù ÀÛ´Ù¸é À§Ä¡ ½º³À ½ÃÅ°°í ÄŞº¸¼öÄ¡ ¿Ã¸®ÀÚ.
+        // todo : ì§¤ë¦° ë¶€ë¶„ì´ ìµœì†Œê°’ë³´ë‹¤ ì‘ë‹¤ë©´ ìœ„ì¹˜ ìŠ¤ëƒ… ì‹œí‚¤ê³  ì½¤ë³´ìˆ˜ì¹˜ ì˜¬ë¦¬ì.
     }
 
     private void OnGameOver()
     {
-        lastInCube.GetComponent<MovingCube>().enabled = false;
-        lastInCube.gameObject.AddComponent<Rigidbody>();
-        lastInCube.GetComponent<Collider>().enabled = true;
+        movingCube.GetComponent<MovingCube>().enabled = false;
+        movingCube.gameObject.AddComponent<Rigidbody>();
+        movingCube.GetComponent<Collider>().enabled = true;
         pointText.text = "Game Over";
     }
 
-    private void GetDropCubeScaleAndPosition(Vector3 newCubeScale, bool moveLocalX, out Vector3 dropCubeScale, out Vector3 dropCubePos)
+    private void GetOutCubeScaleAndPosition(Vector3 newCubeScale, out Vector3 dropCubeScale, out Vector3 dropCubePos)
     {
         dropCubeScale = new Vector3(
-    lastInCube.localScale.x - newCubeScale.x
-    , lastInCube.localScale.y
-    , lastInCube.localScale.z - newCubeScale.z
+    movingCube.localScale.x - newCubeScale.x
+    , movingCube.localScale.y
+    , movingCube.localScale.z - newCubeScale.z
     );
 
-        bool isNegativePositionX = lastInCube.localPosition.x < topCubeTr.localPosition.x;
-        bool isNegativePositionZ = lastInCube.localPosition.z < topCubeTr.localPosition.z;
+        bool isNegativePositionX = movingCube.localPosition.x < stackedCubeTr.localPosition.x;
+        bool isNegativePositionZ = movingCube.localPosition.z < stackedCubeTr.localPosition.z;
         float directionX = isNegativePositionX ? 1 : -1;
         float directionZ = isNegativePositionZ ? -1 : 1;
+
+        bool moveLocalX = level % 2 == 0;
+
         if (moveLocalX)
         {
-            dropCubePos = lastInCube.localPosition - new Vector3(newCubeScale.x, 0, 0) * 0.5f * directionX;
-            dropCubeScale.z = lastInCube.localScale.z;
+            dropCubePos = movingCube.localPosition - new Vector3(newCubeScale.x, 0, 0) * 0.5f * directionX;
+            dropCubeScale.z = movingCube.localScale.z;
         }
         else
         {
-            dropCubePos = lastInCube.localPosition + new Vector3(0, 0, newCubeScale.z) * 0.5f * directionZ;
-            dropCubeScale.x = lastInCube.localScale.x;
+            dropCubePos = movingCube.localPosition + new Vector3(0, 0, newCubeScale.z) * 0.5f * directionZ;
+            dropCubeScale.x = movingCube.localScale.x;
         }
     }
 
     private void CrateInCube(Vector3 newCubeScale)
     {
-        Vector3 newCubePos = Vector3.Lerp(lastInCube.position, topCubeTr.position, 0.5f);
-        newCubePos.y = lastInCube.position.y;
+        Vector3 newCubePos = Vector3.Lerp(movingCube.position, stackedCubeTr.position, 0.5f);
+        newCubePos.y = movingCube.position.y;
 
-        lastInCube.localScale = newCubeScale;
-        lastInCube.position = newCubePos;
-        lastInCube.GetComponent<MovingCube>().enabled = false;
-        lastInCube.GetComponent<Collider>().enabled = true;
-        lastInCube.name = $"In:{level}";
+        movingCube.localScale = newCubeScale;
+        movingCube.position = newCubePos;
+        movingCube.GetComponent<MovingCube>().enabled = false;
+        movingCube.GetComponent<Collider>().enabled = true;
+        movingCube.name = $"In:{level}";
     }
 
     private void CreateOutCube(Vector3 dropCubeScale, Vector3 dropCubePos)
     {
-        var dropGo = Instantiate(lastInCube.gameObject, dropCubePos, lastInCube.rotation, lastInCube.parent);
+        var dropGo = Instantiate(movingCube.gameObject, dropCubePos, movingCube.rotation, movingCube.parent);
         dropGo.transform.localScale = dropCubeScale;
         dropGo.transform.localPosition = dropCubePos;
         dropGo.name = $"Out:{level}";
@@ -148,57 +142,46 @@ public class GameManager : MonoBehaviour
         dropGo.GetComponent<Collider>().enabled = true;
     }
 
-    public float perfectMatchMaxDistance = 0.001f;
-    public int comboCount;
-
-    Transform topCubeTr;
-    Transform lastInCube;
-
+    Transform stackedCubeTr;
+    Transform movingCube;
+     
     private void CreateNextCube()
     {
         pointText.text = level.ToString();
 
-        // È¦ ¼ö ÀÏ¶§´Â ¿À¸¥ÂÊ, Â¦ ¼ö ÀÏ¶§´Â ¿ŞÂÊ
-        Vector3 startPos;
-        if (level % 2 == 0) // È¦¼ö
-        {
-            startPos = new Vector3(distance, level * cubeHeight, distance);
-        }
-        else
-        {
-            startPos = new Vector3(-distance, level * cubeHeight, distance);
-        }
+        // í™€ ìˆ˜ ì¼ë•ŒëŠ” ì˜¤ë¥¸ìª½, ì§ ìˆ˜ ì¼ë•ŒëŠ” ì™¼ìª½
+        Vector3 startPos = new Vector3(distance, level * cubeHeight, distance);
+        if (level % 2 != 0)
+            startPos.x = -startPos.x;
+
 
         var newCube = Instantiate(item, startPos, item.transform.rotation);
         newCube.transform.parent = item.transform.parent;
-        if (lastInCube != null)
+        if (movingCube != null)
         {
-            newCube.pivot = lastInCube.transform.localPosition;
-            newCube.transform.localScale = lastInCube.transform.localScale;
+            newCube.pivot = movingCube.transform.localPosition;
+            newCube.transform.localScale = movingCube.transform.localScale;
         }
 
         newCube.gameObject.SetActive(true);
         newCube.name = level.ToString();
 
-        // ´ÙÀ½ »ö ÁöÁ¤ÇÏÀÚ.
-        changeColor(newCube);
+        // ë‹¤ìŒ ìƒ‰ ì§€ì •í•˜ì.
+        ChangeColor(newCube);
 
-        // Ä«¸Ş¶ó À§·Î ÀÌµ¿ÇÏÀÚ.
+        // ì¹´ë©”ë¼ ìœ„ë¡œ ì´ë™í•˜ì.
         Camera.main.transform.Translate(0, cubeHeight, 0, Space.World);
 
-        topCubeTr = lastInCube;
-        lastInCube = newCube.transform;
+        stackedCubeTr = movingCube;
+        movingCube = newCube.transform;
         level++;
     }
 
-    private void changeColor(MovingCube newCube)
+    private void ChangeColor(MovingCube newCube)
     {
         Color.RGBToHSV(nextColor, out float h, out float s, out float v);
         float nextColorH = h + 1f / 256 * colorChangeStep;
         nextColor = Color.HSVToRGB(nextColorH, s, v);
-
-        //// ±×¶óµ¥ÀÌ¼Ç »ç¿ëÇÒ²¨¸é ¾Æ·¡ ·ÎÁ÷ »ç¿ë
-        //nextColor = gradient.Evaluate( level % 100f * 0.01f);
 
         newCube.GetComponent<Renderer>().material.SetColor("_ColorTop", nextColor);
         newCube.GetComponent<Renderer>().material.SetColor("_ColorBottom", nextColor);
@@ -211,6 +194,4 @@ public class GameManager : MonoBehaviour
         bgMaterial.SetColor("_ColorTop", Color.HSVToRGB(bgTopColorH, s, v));
         bgMaterial.SetColor("_ColorBottom", Color.HSVToRGB(bgBottomColorH, s, v));
     }
-
-    public Gradient gradient;
 }
